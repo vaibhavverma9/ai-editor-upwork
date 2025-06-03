@@ -1,0 +1,58 @@
+{
+  "expo": {
+    "name": "tennis-ai-editor",
+    "slug": "tennis-ai-editor",
+    "version": "1.0.1",
+    "orientation": "portrait",
+    "icon": "../../packages/assets/images/icon-tennis.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tennis.aieditor",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "We need access to your microphone to record audio.",
+        "NSScreenCaptureUsageDescription": "We need access to your screen for recording.",
+        "NSCameraUsageDescription": "We need access to your camera to record video.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "../../packages/assets/images/icon-tennis.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "../../packages/assets/images/icon-tennis.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "../../packages/assets/images/splash-icon-tennis.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#AACADA"
+        }
+      ],
+      "expo-video"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "91875958-ea7d-4bd0-a27a-6cb9b6fb381b"
+      }
+    },
+    "owner": "vaibhavverma9"
+  }
+}

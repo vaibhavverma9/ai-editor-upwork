@@ -1,0 +1,39 @@
+{
+  "cli": {
+    "version": ">= 12.5.4",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "cache": {
+        "disabled": true
+      },
+      "env": {
+        "EXPO_NO_CACHE": "true"
+      }
+    },
+    "preview": {
+      "distribution": "internal",
+      "cache": {
+        "disabled": true
+      },
+      "env": {
+        "EXPO_NO_CACHE": "true"
+      }
+    },
+    "production": {
+      "autoIncrement": true,
+      "cache": {
+        "disabled": true
+      },
+      "env": {
+        "EXPO_NO_CACHE": "true"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

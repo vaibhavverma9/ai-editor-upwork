@@ -1,0 +1,55 @@
+{
+  "expo": {
+    "name": "pb-ai-editor",
+    "slug": "pb-ai-editor",
+    "version": "1.1.2",
+    "orientation": "portrait",
+    "icon": "../../packages/assets/images/icon-pickleball.png",
+    "scheme": "myapp",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.pickleball.aieditor",
+      "infoPlist": {
+        "NSMicrophoneUsageDescription": "We need access to your microphone to record audio.",
+        "NSScreenCaptureUsageDescription": "We need access to your screen for recording.",
+        "NSCameraUsageDescription": "We need access to your camera to record video.",
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "../../packages/assets/images/icon-pickleball.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.pickleball.aieditor"
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "static",
+      "favicon": "../../packages/assets/images/icon-pickleball.png"
+    },
+    "plugins": [
+      "expo-router",
+      [
+        "expo-splash-screen",
+        {
+          "image": "../../packages/assets/images/splash-icon-pickleball.png",
+          "imageWidth": 200,
+          "resizeMode": "contain",
+          "backgroundColor": "#AACADA"
+        }
+      ],
+      "expo-video"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "a380b67c-1410-4fff-bb17-ef4f18cf00b4"
+      }
+    }
+  }
+}
