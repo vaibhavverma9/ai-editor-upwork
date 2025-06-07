@@ -100,7 +100,7 @@ export default function AIEditing({
     }, [localUniqueUserId]);
 
     const tryUploadVideo = async (file) => {
-        consoe.log("tryUploadVideo", file);
+        console.log("tryUploadVideo", file);
         const upload = new Upload(file, {
           // endpoint: 'http://172.20.10.3:4000/uploads',
           endpoint: 'https://boiling-temple-07591-774b277da223.herokuapp.com/uploads',
@@ -196,7 +196,7 @@ export default function AIEditing({
 
         console.log("calling /insertRawAIVideo");
 
-        await axios({ 
+        axios({ 
             method: 'post', 
             url: 'https://boiling-temple-07591-774b277da223.herokuapp.com/insertRawAIVideo',
             data: { videoId, showWatermark: false, height: asset.height, width: asset.width, deviceAssetId: asset.assetId, passthroughId, duration: asset.duration }
