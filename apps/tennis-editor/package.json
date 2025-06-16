@@ -36,7 +36,6 @@
     "expo-status-bar": "~2.0.1",
     "expo-symbols": "~0.2.2",
     "expo-system-ui": "~4.0.9",
-    "expo-tus-uploader": "https://github.com/vaibhavverma9/expo-tus-uploader",
     "expo-video": "~2.0.6",
     "expo-video-thumbnails": "~9.0.3",
     "expo-web-browser": "~14.0.2",
