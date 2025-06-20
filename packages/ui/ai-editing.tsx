@@ -6,7 +6,7 @@ import { ActivityIndicator, Alert, Image, ScrollView, StyleSheet, Text, TextInpu
 import { styles } from '@styles';
 import { Video } from 'react-native-compressor';
 import { usePostHog } from 'posthog-react-native';
-import { Upload, ReactNativeFile } from 'tus-js-client';
+import { ReactNativeFile } from 'tus-js-client';
 import { useColorScheme } from '@hooks/useColorScheme';
 import React from 'react';
 import ChooseQualityScreen from '@components/ChooseQualityScreen';
@@ -15,6 +15,8 @@ import AIVideoSubmissions from '@components/AIVideoSubmissions';
 import { useSubscriptionStatus } from '@hooks/useSubscriptionStatus';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import WatermarkPage from '@components/WatermarkPage';
+
+import { Upload, setupClient } from 'react-native-tus-client';
 
 export default function AIEditing({
     sport
@@ -38,12 +40,19 @@ export default function AIEditing({
     const [qualitySelectionScreen, setQualitySelectionScreen] = useState(false);
     const [thumbnailUri, setThumbnailUri] = useState('');
 
+    const [progress, setProgress] = useState(0);
+    const [status, setStatus] = useState('idle'); // 'idle' | 'uploading' | 'success' | 'error'
+    const [error, setError] = useState<string | null>(null);
+    const [uploadId, setUploadId] = useState<string | null>(null);
+
     const uploadOneMore = () => {
         getVideoId();
         uploadVideo();
     }
 
     const uploadVideo = async () => {
+        //Alert.alert("uploadvideo");
+        //return;
         posthog.capture("user_opened_video_picker");
         logWithTimestamp("Upload video initiated");
         setTimeout(() => {
@@ -88,6 +97,19 @@ export default function AIEditing({
 
     useEffect(() => {
         getVideoId();
+
+        const initializeClient = async () => {
+            try {
+                await setupClient('https://boiling-temple-07591-774b277da223.herokuapp.com/uploads', 5 * 1024 * 1024);
+                console.log('TUS client initialized successfully');
+            } catch (err) {
+                console.error('Failed to initialize TUS client:', err);
+                setError('Failed to initialize upload client');
+                setStatus('error');
+            }
+        };
+
+        initializeClient();
     }, []);
 
     useEffect(() => {
@@ -101,6 +123,50 @@ export default function AIEditing({
 
     const tryUploadVideo = async (file) => {
         console.log("tryUploadVideo", file);
+        const upload = new Upload(file.uri, {
+            endpoint: 'https://boiling-temple-07591-774b277da223.herokuapp.com/uploads',
+            metadata: {
+                filename: file.name,
+                filetype: file.type,
+                uploadId: videoId
+            },
+            onProgress: (progress) => {
+                console.log(`Upload progress: ${0.20 + (progress * 100) * 0.80}%`);
+                setLoadingPercentage(progress);
+                logWithTimestamp('TUS Upload Progress:', progress);
+            },
+            onSuccess: (url) => {
+                console.log('Upload completed:', url);
+                logWithTimestamp('Upload successful');
+                posthog.capture('video_upload_success');
+                axios({ 
+                    method: 'post', 
+                    // url: 'http://172.20.10.3:4000/markRawAIVideoReady',
+                    url: 'https://boiling-temple-07591-774b277da223.herokuapp.com/markRawAIVideoReady',
+                    data: { videoId }
+                });
+                setLoadingPercentage(1);
+            },
+            onError: (error) => {
+                //console.error('Upload failed:', error);
+                setAskForNumber(false);
+                setVideoLoading(false);
+                setSelectedVideo(null);
+                setLoadingPercentage(0);
+                setUploadedVideo(false);
+                logWithTimestamp('Upload failed', error);
+                posthog.capture('video_upload_failed', { error: error.message });
+                Alert.alert(`Upload error`, `Please text 949-346-2143 for customer support.`);
+            }
+        });
+
+        await upload.start();
+        console.log('Upload started:', result);
+
+    }
+
+    /* const tryUploadVideo = async (file) => {
+        consoe.log("tryUploadVideo", file);
         const upload = new Upload(file, {
           // endpoint: 'http://172.20.10.3:4000/uploads',
           endpoint: 'https://boiling-temple-07591-774b277da223.herokuapp.com/uploads',
@@ -141,7 +207,7 @@ export default function AIEditing({
           }
         });
         upload.start();
-    };
+    }; */
 
     const uploadVideoToServer = async (asset, bitrate, maxSize) => {
         console.log("uploadVideoToServer");
@@ -184,13 +250,12 @@ export default function AIEditing({
             //     slice: blob.slice.bind(blob), // needed by tus
             // };
             const safeUri = await getSafeVideoUri(asset, videoId);
-            console.log("creating react native file");
-            file = new ReactNativeFile({
+            console.log("creating react native file: "+safeUri+", videoId::"+videoId+", size::"+asset.fileSize);
+            file = {
                 uri: safeUri,
                 name: `${videoId}.mp4`,
-                type: 'video/mp4',
-                size: asset.fileSize          // optional but nice
-            });
+                type: 'video/mp4'
+            };
             console.log("successfully createdf react native file");
         }
 
@@ -203,6 +268,7 @@ export default function AIEditing({
         }); 
 
         setLoadingPercentage(0.20); 
+        console.log("before calling tryUploadVideo::", file);
         await tryUploadVideo(file);
     }
 

@@ -1,0 +1,9 @@
+--- xcodebuild: WARNING: Using the first of multiple matching destinations:
+{ platform:iOS Simulator, arch:arm64, id:394FBA61-1F44-4D85-9A47-E21A898C2531, OS:18.4, name:iPhone 16 }
+{ platform:iOS Simulator, arch:x86_64, id:394FBA61-1F44-4D85-9A47-E21A898C2531, OS:18.4, name:iPhone 16 }
+** BUILD FAILED **
+
+
+The following build commands failed:
+	Building project aieditorupwork with scheme aieditorupwork and configuration Debug
+(1 failure)
