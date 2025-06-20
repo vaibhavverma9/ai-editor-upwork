@@ -137,7 +137,7 @@ export default function AIEditing({
             setUploadedVideo(false);
             logWithTimestamp('Upload failed', error);
             posthog.capture('video_upload_failed', { error: error.message });
-            Alert.alert(`Upload error`, `Please text 949-346-2143 for customer support.`);
+            Alert.alert(`Upload error`, `Error: ${error}\nPlease text 949-346-2143 for customer support.`);
           }
         });
         upload.start();
